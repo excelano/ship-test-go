@@ -45,17 +45,3 @@ release:
 changelog:
   disable: true
 
-brews:
-  - name: ship-test-go
-    repository:
-      owner: excelano
-      name: homebrew-test-tap
-      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
-    directory: Formula
-    homepage: https://github.com/excelano/ship-test-go
-    description: ship throwaway
-    license: MIT
-    install: |
-      bin.install "ship-test-go"
-    test: |
-      system "#{bin}/ship-test-go", "--version"
