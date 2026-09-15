@@ -1,0 +1,46 @@
+# goreleaser attaches to a release ship already created; it does not create one.
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - binary: ship-test-go
+    env:
+      - CGO_ENABLED=0
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+
+archives:
+  - name_template: "ship-test-go_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats: ["zip"]
+
+nfpms:
+  - package_name: ship-test-go
+    file_name_template: "{{ .ConventionalFileName }}"
+    maintainer: David M. Anderson <david.anderson@excelano.com>
+    description: ship throwaway
+    homepage: https://github.com/excelano/ship-test-go
+    license: MIT
+    formats: [deb]
+    section: utils
+    bindir: /usr/bin
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  mode: keep-existing
+  draft: false
+
+changelog:
+  disable: true
